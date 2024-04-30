@@ -6,6 +6,7 @@ from django.utils import timezone
 from django.test.client import Client
 
 from news.models import News, Comment
+from news.forms import BAD_WORDS
 
 
 @pytest.fixture
@@ -92,3 +93,19 @@ def comment_list(author, news):
         comment.created = timezone.now() + timedelta(days=index)
         comment.save()
     return comment_list
+
+
+@pytest.fixture
+def form_data():
+    """Значение формы комментария."""
+    return {
+        'text': 'Новый комментарий',
+    }
+
+
+@pytest.fixture
+def bad_words_data():
+    """Запрещенные слова."""
+    return {
+        'text': f'Какой-то текст, {BAD_WORDS[0]}, и еще.'
+    }
