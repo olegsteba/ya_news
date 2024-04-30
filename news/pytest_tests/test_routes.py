@@ -5,8 +5,9 @@ from http import HTTPStatus
 from django.urls import reverse
 from pytest_django.asserts import assertRedirects
 
+pytestmark = [pytest.mark.django_db]
 
-@pytest.mark.django_db
+
 @pytest.mark.parametrize(
     'name, args',
     (

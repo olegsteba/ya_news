@@ -1,5 +1,8 @@
 import pytest
+from datetime import datetime, timedelta
 
+from django.conf import settings
+from django.utils import timezone
 from django.test.client import Client
 
 from news.models import News, Comment
@@ -47,6 +50,20 @@ def news_id_for_args(news):
 
 
 @pytest.fixture
+def news_list():
+    """Список из 11 объектов Новости"""
+    news_list = News.objects.bulk_create(
+        News(
+            title=f'Новость {index}',
+            text='Текст новости',
+            date=datetime.today() - timedelta(days=index),
+        )
+        for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
+    )
+    return news_list
+
+
+@pytest.fixture
 def comment(author, news):
     """Объект комментарий."""
     comment = Comment.objects.create(
@@ -61,3 +78,17 @@ def comment(author, news):
 def comment_id_for_args(comment):
     """Возвращает кортедж ID комментарий."""
     return (comment.pk, )
+
+
+@pytest.fixture
+def comment_list(author, news):
+    """Список из 10 комментариев к новости."""
+    for index in range(10):
+        comment = Comment.objects.create(
+            news=news,
+            author=author,
+            text=f'Комментарий {index}',
+        )
+        comment.created = timezone.now() + timedelta(days=index)
+        comment.save()
+    return comment_list

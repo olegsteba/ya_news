@@ -18,8 +18,8 @@ class TestHomePage(TestCase):
         today = datetime.today()
         all_news = [
             News(
-                title=f'новость {index}',
-                text='текст',
+                title=f'Новость {index}',
+                text='Текст новости',
                 date=today - timedelta(days=index),
             )
             for index in range(settings.NEWS_COUNT_ON_HOME_PAGE + 1)
