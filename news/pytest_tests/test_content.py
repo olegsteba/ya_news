@@ -28,9 +28,9 @@ def test_news_order(client, news_list):
     assert all_dates == sorted_dates
 
 
-def test_comments_order(client, news_id_for_args, comment_list):
+def test_comments_order(client, news, comment_list):
     """Сортировка комментариев от старых к новым."""
-    url = reverse('news:detail', args=news_id_for_args)
+    url = reverse('news:detail', args=(news.id, ))
     response = client.get(url)
     assert 'news' in response.context
     news = response.context['news']
@@ -40,12 +40,12 @@ def test_comments_order(client, news_id_for_args, comment_list):
     assert all_timestamps == sorted_timestamps
 
 
-def test_client_has_comment_form(client, author_client, news_id_for_args):
+def test_client_has_comment_form(client, author_client, news):
     """Форма добавления комментариев к новостям:
     - не доступна анонимному пользователю;
     - доступна для авторизированных пользователей.
     """
-    url = reverse('news:detail', args=news_id_for_args)
+    url = reverse('news:detail', args=(news.id, ))
     response = client.get(url)
     author_client_response = author_client.get(url)
     assert 'form' not in response.context
